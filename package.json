@@ -17,6 +17,7 @@
     "popper.js": "^1.16.1",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.5",
+    "vue-loading-overlay": "^3.3.2",
     "vue-router": "^3.3.2"
   },
   "devDependencies": {

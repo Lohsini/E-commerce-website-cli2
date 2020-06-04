@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading :active.sync="isLoading"></loading>
     <div class="text-right mt-4">
       <button class="btn btn-primary" @click="openModal(true)">建立新的產品</button>
     </div>
@@ -15,8 +16,8 @@
       <tbody v-for="(item) in products" :key="item.id">
         <td>{{ item.category }}</td>
         <td>{{ item.title }}</td>
-        <td class="text-right">{{ item.origin_price | currency | dollarSign  }}</td>
-        <td class="text-right">{{ item.price | currency | dollarSign  }}</td>
+        <td class="text-right">{{ item.origin_price | currency }}</td>
+        <td class="text-right">{{ item.price | currency }}</td>
         <td>
           <span v-if="item.is_enabled == 1">啟用</span>
           <span v-else>未啟用</span>
@@ -52,10 +53,10 @@
 
                 <div class="form-group">
                   <label for="customFile">或 上傳圖片
-                    <i class="fas fa-spinner fa-spin"></i>
+                    <i class="fas fa-spinner fa-spin" v-if="status.fileUploading"></i>
                   </label>
                   <input type="file" id="customFile" class="form-control"
-                    ref="files">
+                    ref="files" @change="uploadFile">
                 </div>
 
                 <img img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
@@ -166,14 +167,20 @@ export default {
       products: [],
       tempProduct: {},
       isNew: false,
+      isLoading: false,
+      status: {
+        fileUploading: false,
+      }
     }
   },
   methods:{
     getProducts: function(){
       const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products`;
       const vm = this;
+      vm.isLoading = true;
       this.$http.get(api).then((response) => {
         console.log(response.data);
+        vm.isLoading = false;
         vm.products = response.data.products;
       });
     },
@@ -227,20 +234,29 @@ export default {
         }
       });
     },
+    uploadFile: function(){
+      console.log(this);
+      const uploadedFile = this.$refs.files.files[0];
+      const vm = this;
+      const formData = new FormData();
+      formData.append('file-to-upload', uploadedFile);
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;
+      vm.status.fileUploading = true;
+      this.$http.post(url, formData,{
+        headers:{
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((response) => {
+        console.log(response.data);
+        vm.status.fileUploading = false;
+        if (response.data.success) {
+          vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl);
+        }
+      });
+    },
   },
   created() {
     this.getProducts();
   },
-  filters:{
-  currency: function(n) {
-    return `${n}`;
-  //   return n.toFixed(2).replace(/./g, function(c, i, a) {
-  //     return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
-  //   });
-  },
-  dollarSign: function(n){
-    return `$ ${n}`;
-  }
-},
 }
 </script>
