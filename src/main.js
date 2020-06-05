@@ -10,6 +10,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import App from './App';
 import router from './router';
 import currencyFilter from './filters/currency';
+import './bus';
 
 
 Vue.use(VueAxios, axios)

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Login from "@/components/pages/login";
-import Dashboard from "@/components/pages/dashboard";
+import Dashboard from "@/components/dashboard";
 import Products from "@/components/pages/products";
 
 
