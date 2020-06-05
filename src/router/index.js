@@ -3,33 +3,45 @@ import VueRouter from 'vue-router';
 import Login from "@/components/pages/login";
 import Dashboard from "@/components/dashboard";
 import Products from "@/components/pages/products";
+import CustomerOrder from "@/components/pages/customerOrder";
 
 
 Vue.use(VueRouter);
 
 export default new VueRouter({
-  routes:[ //拼對喔
+  routes: [ //拼對喔
     {
-      path:'*',
+      path: '*',
       redirect: '/login'
     },
     {
       name: '登入',
-      path: '/login', 
+      path: '/login',
       component: Login,
     },
     {
       name: 'dashboard',
       path: '/admin',
       component: Dashboard,
-      meta:{ requiresAuth:true },
-      children:[
+      children: [
         {
           name: 'products',
           path: 'products',
           component: Products,
-          meta:{ requiresAuth:true }
+          meta: { requiresAuth: true }
         },
+      ]
+    },
+    {
+      name: 'dashboard',
+      path: '/',
+      component: Dashboard,
+      children: [
+        {
+        name: '模擬訂單',
+        path: '/customerorder',
+        component: CustomerOrder,
+        }
       ]
     }
   ]
