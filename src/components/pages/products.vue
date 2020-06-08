@@ -116,13 +116,13 @@
 
                 <div class="form-row">
                   <div class="form-group col-md-6">
-                    <label for="category">分類(先改為id)</label>
+                    <label for="category">分類</label>
                     <input
                       type="text"
                       class="form-control"
                       id="category"
-                      placeholder="請輸入分類(先改為id)"
-                      v-model="tempProduct.id"
+                      placeholder="請輸入分類"
+                      v-model="tempProduct.category"
                     />
                   </div>
                   <div class="form-group col-md-6">
